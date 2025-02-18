@@ -38,15 +38,16 @@ export default function Home() {
         scrollTrigger: {
           trigger: accordionsRef.current,
           pin: true,
-          start: "top top",
+          start: "top 10%",
           end: "bottom top",
           scrub: 1,
+          markers: true,
         },
       });
 
       // Animate texts
       gsap.set(textRefs.current, { height: "auto" });
-      
+
       tl.to(textRefs.current, {
         height: 0,
         paddingBottom: 0,

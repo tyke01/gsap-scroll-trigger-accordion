@@ -46,6 +46,7 @@ export default function Home() {
 
       // Animate texts
       gsap.set(textRefs.current, { height: "auto" });
+      
       tl.to(textRefs.current, {
         height: 0,
         paddingBottom: 0,

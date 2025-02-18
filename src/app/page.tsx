@@ -1,101 +1,128 @@
-import Image from "next/image";
+"use client";
+
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useRef, RefObject, MutableRefObject } from "react";
+
+gsap.registerPlugin(ScrollTrigger);
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const accordionsRef = useRef<HTMLDivElement>(null);
+  const accordionRefs = useRef<HTMLDivElement[]>([]);
+  const textRefs = useRef<HTMLDivElement[]>([]);
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+  // Reset refs arrays
+  accordionRefs.current = [];
+  textRefs.current = [];
+
+  // Add to accordion refs
+  const addToAccordionRefs = (el: HTMLDivElement | null) => {
+    if (el && !accordionRefs.current.includes(el)) {
+      accordionRefs.current.push(el);
+    }
+  };
+
+  // Add to text refs
+  const addToTextRefs = (el: HTMLDivElement | null) => {
+    if (el && !textRefs.current.includes(el)) {
+      textRefs.current.push(el);
+    }
+  };
+
+  useGSAP(
+    () => {
+      if (!accordionsRef.current) return;
+
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: accordionsRef.current,
+          pin: true,
+          start: "top top",
+          end: "bottom top",
+          scrub: 1,
+        },
+      });
+
+      // Animate texts
+      gsap.set(textRefs.current, { height: "auto" });
+      tl.to(textRefs.current, {
+        height: 0,
+        paddingBottom: 0,
+        opacity: 0,
+        stagger: 0.5,
+      });
+
+      // Animate accordions
+      tl.to(
+        accordionRefs.current,
+        {
+          marginBottom: -15,
+          stagger: 0.5,
+        },
+        "<"
+      );
+    },
+    { scope: accordionsRef }
+  );
+
+  return (
+    <div className="bg-gradient-to-tr from-[#5c2fa6] to-[#5a36c0]">
+      <div id="wrapper">
+        <div id="content">
+          <div className="spacer" />
+
+          <div
+            ref={accordionsRef}
+            className="accordions flex flex-col items-center pb-[20vh]"
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+            {/*  */}
+            <div ref={addToAccordionRefs} className="accordion">
+              <div className="title">All-screen design.</div>
+              <div ref={addToTextRefs} className="text">
+                Lets you immerse yourself in whatever you're reading, watching,
+                or creating. The 10.9-inch Liquid Retina display features
+                advanced technologies like True Tone, P3 wide color, and an
+                antireflective coating.1
+              </div>
+            </div>
+            {/*  */}
+            <div ref={addToAccordionRefs} className="accordion">
+              <div className="title"> Beauty all around.</div>
+              <div ref={addToTextRefs} className="text">
+                The breakthrough M1 chip is now in Air. An 8-core CPU delivers
+                up to 60 percent faster performance than the previous
+                generation, making Air a creative and mobile gaming powerhouse.
+                Multitask smoothly between powerful apps and play
+                graphics-intensive games. And with M1, you can go even further
+                with your creativity with apps like SketchUp.
+              </div>
+            </div>
+            {/*  */}
+            <div ref={addToAccordionRefs} className="accordion">
+              <div className="title">Take Center Stage.</div>
+              <div ref={addToTextRefs} className="text">
+                The 12MP Ultra Wide front camera enables Center Stage, making
+                video calls more natural and content creation more fun. As you
+                move around, the camera automatically pans to keep you centered
+                in the shot. When others join or leave the frame, the view
+                expands or zooms in.
+              </div>
+            </div>
+            {/*  */}
+            <div ref={addToAccordionRefs} className="accordion">
+              <div className="title">Pretty everywhere.</div>
+              <div ref={addToTextRefs} className="text">
+                Join superfast 5G wireless networks when you're on the go.
+                Download files, play multiplayer games, stream movies, check in
+                with friends, and more.
+              </div>
+            </div>
+            {/*  */}
+          </div>
+          <div className="spacer"></div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      </div>
     </div>
   );
 }
